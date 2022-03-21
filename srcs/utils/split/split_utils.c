@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:09:20 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/16 14:23:10 by jgainza-         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:30:03 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_count_redir(char *str, int *i, int *j)
 
 	if ((int)ft_strlen(str) > *i && (str[*i] == '<' || str[*i] == '>'))
 	{
-		if (*i - 1 != -1 &&  (int)ft_strlen(str) > *i - 1 && str[*i - 1] != ' '
+		if (*i - 1 != -1 && (int)ft_strlen(str) > *i - 1 && str[*i - 1] != ' '
 			&& str[*i - 1] != '>' && str[*i - 1] != '<' && *i != 0)
 			*j = *j + 1;
 		c = str[*i];
@@ -91,4 +91,27 @@ void	ft_str_quote(char *str, int *i, int *j)
 		}
 		c = ' ';
 	}
+}
+
+char	**ft_trames(int j, int sig, int i, char **str)
+{
+	i = -1;
+	while (str[++i])
+	{
+		j = 0;
+		sig = 0;
+		while (str[i][j])
+		{
+			if (str[i][j] != ' ')
+				sig = 1;
+			j++;
+		}
+		if (sig == 0)
+		{
+			printf("Error synstaxis\n");
+			ft_double_free(str);
+			return (NULL);
+		}
+	}
+	return (str);
 }

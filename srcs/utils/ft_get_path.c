@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:56:05 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/02/24 15:06:03 by jgainza-         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:18:07 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,26 @@ static char	**ft_split_path(char *s)
 	return (split);
 }
 
-char	*ft_get_path(char *s)
+static char	*ft_look_in_env(int i, int *x, char *temp)
+{
+	while (g_glob.g_env[++i])
+	{
+		if (!ft_strncmp(g_glob.g_env[i], "PATH=", 5))
+		{
+			*x = 1;
+			temp = g_glob.g_env[i];
+		}
+	}
+	return (temp);
+}
+
+char	*ft_get_path(char *s, int i, int x, char *join)
 {
 	char	**split;
 	char	*temp;
-	char	*join;
-	int		i;
 
-	i = -1;
-	while (g_glob.g_env[++i])
-		if (!ft_strncmp(g_glob.g_env[i], "PATH=", 5))
-			temp = g_glob.g_env[i];
-	if (!temp)
+	temp = ft_look_in_env(i, (int *)&x, NULL);
+	if (!temp || x == 0)
 		return (NULL);
 	split = ft_split_path(temp);
 	s = ft_strjoin("/", s);

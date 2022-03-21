@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 14:36:04 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/07 18:10:46 by jgainza-         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:35:01 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,17 @@ int	ft_success(char *str, int i, int k, int x)
 	return (k);
 }
 
+static void	ft_looperdollar(char *str, int *i, int *w)
+{
+	*w = 0;
+	while (str[*i] != ' ' && !(str[*i] == '\''
+			|| str[*i] == '\"' || str[*i] == '=') && str[*i])
+	{
+		*w = *w + 1;
+		*i = *i + 1;
+	}
+}
+
 int	ft_dollarlen(char *str, int j, int w, int k)
 {
 	int		i;
@@ -59,17 +70,12 @@ int	ft_dollarlen(char *str, int j, int w, int k)
 	{
 		if ((str[i] == '$' && str[i + 1]) && k == 1)
 		{
-			while (str[i] != ' ' && !(str[i] == '\''
-					|| str[i] == '\"' || str[i] == '=') && str[i])
-			{
-				w++;
-				i++;
-			}
+			ft_looperdollar(str, (int *)&i, (int *)&w);
 			p2 = ft_substr(str, (i - w), w);
-			p = ft_expand(p2, 0);
-			ft_single_free(p2);
-			x = ft_strlen(p);
-			ft_single_free(p);
+			p = ft_expand(p2, 0, 0);
+			x += ft_strlen(p);
+			free(p2);
+			free(p);
 		}
 		else
 		{
@@ -80,7 +86,7 @@ int	ft_dollarlen(char *str, int j, int w, int k)
 	return (j + x);
 }
 
-char	*ft_dollardup(char *str, char *aux, int w, int k)
+void	ft_dollardup(char *str, char *aux, int w, int k)
 {	
 	int		i;
 	int		j;
@@ -91,25 +97,20 @@ char	*ft_dollardup(char *str, char *aux, int w, int k)
 	j = 0;
 	while (str[i])
 	{
+		w = 0;
 		if ((str[i] == '$' && str[i + 1]) && k == 1)
 		{
-			while (str[i] != ' ' && !(str[i] == '\''
-					|| str[i] == '\"' || str[i] == '=') && str[i])
-			{
-				w++;
-				i++;
-			}
+			ft_looperdollar(str, (int *)&i, (int *)&w);
 			p = ft_substr(str, (i - w), w);
-			temp = ft_expand(p, 0);
-			ft_single_free(p);
+			temp = ft_expand(p, 0, 0);
+			free(p);
 			w = 0;
 			while (temp[w])
 				aux[j++] = temp[w++];
-			ft_single_free(temp);
+			free(temp);
 		}
 		else
 			aux[j++] = str[i++];
 	}
 	ft_single_free(str);
-	return (aux);
 }

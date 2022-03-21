@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:14 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/20 16:52:38 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:09:54 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	ft_exe(t_shell *shell, int id)
 	char	*temp;
 
 	ft_memset(&redi, 0, sizeof(redi));
-	rl_catch_signals = 1;
+	rl_catch_signals = 0;
 	shell->split = ft_split_mini(shell->pipes[id], &redi);
 	shell->split = ft_redirections(shell->split, &redi, shell);
 	if (!shell->split)
@@ -62,7 +62,7 @@ static void	ft_exe(t_shell *shell, int id)
 	temp = shell->split[0];
 	if (access(shell->split[0], X_OK) != 0
 		&& ft_checkchild(shell->split) && ft_checkparent(shell->split))
-		temp = ft_get_path(shell->split[0]);
+		temp = ft_get_path(shell->split[0], -1, 0, NULL);
 	if (id != 0)
 		dup2(shell->fd[0][0], STDIN_FILENO);
 	if (id != shell->nchild - 1)
@@ -91,6 +91,7 @@ static void	ft_repipe_help(t_shell *shell)
 void	ft_fork(t_shell *shell, int i)
 {
 	int	status;
+	int	st;
 
 	g_glob.pid = 0;
 	unlink("heredoc.txt");
@@ -101,16 +102,16 @@ void	ft_fork(t_shell *shell, int i)
 	while (++i < shell->nchild)
 	{
 		close(shell->fd[0][1]);
-		//printf("shell->fd[0][0] %d shell->fd[0][1] %d shell->fd[1][0] %d shell->fd[1][1] %d\n", shell->fd[0][0], shell->fd[0][1], shell->fd[1][0], shell->fd[1][1]);
 		shell->pid[i] = fork();
 		if (shell->pid[i] == 0)
 			ft_exe(shell, i);
 		else
 		{
 			if (shell->nchild == i + 1)
-				ft_builtinp(ft_split_mini(shell->pipes[i], NULL), shell);
+				st = ft_builtinp(ft_split_mini(shell->pipes[i], NULL), shell);
 			waitpid (shell->pid[i], &status, 0);
-			g_glob.error = WEXITSTATUS(status);
+			if (st != 1)
+				g_glob.error = WEXITSTATUS(status);
 			ft_repipe_help(shell);
 		}
 	}

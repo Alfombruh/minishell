@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 09:02:30 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/09 16:38:27 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 16:48:40 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static void	ft_duperloop(char *str, char *aux, int i, int j)
 
 static char	*ft_dollar(char *str, int k)
 {
-	char	*temp;
 	char	*aux;
 	int		x;
 
@@ -74,8 +73,8 @@ static char	*ft_dollar(char *str, int k)
 	x = ft_dollarlen(str, 0, 0, k);
 	aux = malloc(x * sizeof(char) + 1);
 	aux[x] = '\0';
-	temp = ft_dollardup(str, aux, 0, k);
-	return (temp);
+	ft_dollardup(str, aux, 0, k);
+	return (aux);
 }
 
 char	*ft_trimed(char *str, int i)

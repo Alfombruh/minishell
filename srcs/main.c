@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:16:46 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/20 16:51:36 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 18:54:25 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	ft_sig_handler(int sign_num)
 {
-	//printf("g_glob.pid == %d\n", g_glob.pid);
 	if (sign_num == SIGINT && g_glob.pid)
 	{
 		printf("\n");
@@ -82,7 +81,7 @@ int	main(int argc, char **argv, char **env)
 			ft_exit_p(ft_dup_to_double("exit"));
 		add_history(shell.line);
 		ft_fork(&shell, -1);
-		g_glob.pid = 1; //para que despues de hacer el tema de forking puedan seguir funcionando bien la se;ales
+		g_glob.pid = 1;
 		free(shell.line);
 	}
 	i = -1;

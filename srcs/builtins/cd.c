@@ -6,7 +6,7 @@
 /*   By: jofernan <jofernan@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/13 10:34:35 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/16 15:59:17 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 18:53:26 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@ static	void	ft_refresh_env(char *str)
 	ft_double_free(temp2);
 }
 
-static int	ft_cd_home(void)
+static int	ft_cd_home(int i)
 {
-	int		i;
 	int		j;
 	char	*temp;
 
-	i = -1;
 	temp = NULL;
 	while (g_glob.g_env[++i])
 	{
@@ -68,13 +66,11 @@ static int	ft_cd_home(void)
 	return (1);
 }
 
-static int	ft_cd_hyphen(void)
+static int	ft_cd_hyphen(int i)
 {
-	int		i;
 	int		j;
 	char	*temp;
 
-	i = -1;
 	temp = NULL;
 	while (g_glob.g_env[++i])
 	{
@@ -104,21 +100,24 @@ int	ft_cd(char **str)
 	char	*s;
 
 	s = getcwd(cwd, PATH_MAX);
-	if (str[1] == 0)
+	if (str[1] == 0 || !ft_strncmp(str[1], "~", 1))
 	{
-		if (ft_cd_home() == 1)
-			return (0);
+		if (ft_cd_home(-1) == 1)
+			return (1);
 	}
 	else if (!ft_strncmp(str[1], "-", 1))
 	{
-		if (ft_cd_hyphen() == 1)
-			return (0);
+		if (ft_cd_hyphen(-1) == 1)
+			return (1);
 	}
 	else
 	{
 		i = chdir(str[1]);
 		if (i == -1)
+		{
 			ft_printf("minishell: cd : %s: No such file or directory\n", str[1]);
+			return (1);
+		}
 	}
 	ft_refresh_env(s);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: jofernan <jofernan@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 16:54:16 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/07 17:51:36 by jgainza-         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:34:05 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,11 @@ static int	ft_export_errors(char **str, int i, int j)
 
 static char	**ft_already_exists(char **ptr, int i, int k, int w)
 {
-	int		j;
 	char	**temp;
-	char	*s1;
 	char	**str;
 
-	str = ft_inline(ptr);
-	while (str[++i])
-	{
-		j = 0;
-		while (g_glob.g_env[j])
-		{
-			s1 = ft_strtillequal(str[i]);
-			if (ft_strstr(str[i], "=") && ft_strstr(g_glob.g_env[j], s1))
-			{
-				k++;
-				ft_single_free(s1);
-				break ;
-			}
-			ft_single_free(s1);
-			j++;
-		}
-		w++;
-	}
+	str = ft_inline(ptr, 0, 0);
+	ft_already_count(str, i, (int *)&k, (int *)&w);
 	temp = (char **)malloc(sizeof(char *) * (w - k + 1));
 	if (!temp)
 		return (NULL);
@@ -75,13 +57,11 @@ static char	**ft_already_exists(char **ptr, int i, int k, int w)
 	return (temp);
 }
 
-static char	**ft_treatstr(char **ptr, int i)
+static char	**ft_treatstr(char **ptr, int i, int j)
 {
-	int		j;
 	char	**str;
 	char	**temp;
 
-	j = 0;
 	str = ft_already_exists(ptr, 0, 0, 0);
 	i = -1;
 	while (str[++i])
@@ -138,9 +118,9 @@ int	ft_export(char **str)
 
 	i = -1;
 	j = 0;
-	if (ft_export_errors(str, i, j))
+	if (ft_export_errors(str, i, j) == 1)
 		return (1);
-	aux = ft_treatstr(str, 0);
+	aux = ft_treatstr(str, 0, 0);
 	i = 0;
 	while (aux[i])
 		i++;

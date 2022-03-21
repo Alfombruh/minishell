@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= gcc
 RM		= rm -rf
-CFLAGS	= -Wall -Wextra -Werror -I/Users/$(USER)/.brew/opt/readline/include -fsanitize=address -g3 -ggdb3
+CFLAGS	= -Wall -Wextra -Werror -I/Users/$(USER)/.brew/opt/readline/include -ggdb3 #-fsanitize=address -g3 
 LDFLAGS	= -lreadline -L /Users/$(USER)/.brew/opt/readline/lib 
 GREEN	= \033[0;32m
 RED		= \033[0;31m
@@ -14,6 +14,7 @@ FUNC	= srcs/main \
 		  srcs/builtins/cd \
 		  srcs/builtins/export/export \
 		  srcs/builtins/export/additions \
+		  srcs/builtins/export/additions2 \
 		  srcs/builtins/unset \
 		  srcs/builtins/exit \
 		  srcs/utils/split/split \
@@ -26,8 +27,8 @@ FUNC	= srcs/main \
 		  srcs/utils/ft_fork \
 		  srcs/utils/ft_get_path \
 		  srcs/utils/ft_builtins \
-		  srcs/utils/ft_helpredis \
-		  srcs/utils/ft_redirections \
+		  srcs/utils/redirections/ft_redirections \
+		  srcs/utils/redirections/ft_helpredis \
 		  srcs/utils/dup_to
 
 SRC		= $(addsuffix .c, $(FUNC))

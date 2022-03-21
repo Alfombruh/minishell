@@ -6,62 +6,61 @@
 #    By: jgainza- <jgainza-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/02 11:46:30 by jgainza-          #+#    #+#              #
-#    Updated: 2022/03/18 19:36:59 by jofernan         ###   ########.fr        #
+#    Updated: 2022/03/20 17:57:58 by jofernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			=	ft_isalnum.c ft_isprint.c ft_memcmp.c  ft_putchar_fd.c ft_split.c \
-					ft_strlcat.c ft_strncmp.c ft_substr.c ft_atoi.c ft_isalpha.c \
-					ft_itoa.c ft_memcpy.c  ft_putendl_fd.c ft_strchr.c  ft_strlcpy.c \
-					ft_strnstr.c ft_tolower.c ft_bzero.c   ft_isascii.c ft_memccpy.c \
-					ft_memmove.c ft_putnbr_fd.c  ft_strdup.c  ft_strlen.c  ft_strrchr.c \
-					ft_toupper.c ft_calloc.c  ft_isdigit.c ft_memchr.c  ft_memset.c  ft_strstr.c \
-					ft_putstr_fd.c  ft_strjoin.c ft_strmapi.c ft_strtrim.c ft_strcmp.c ft_union.c \
-					ft_strchrint.c ft_putstr_fd2.c ft_tolower_chr.c ft_strtrim_begin.c \
-					ft_printf/extra/ft_pitoa.c \
-					ft_printf/extra/ft_putstr_int.c \
-					ft_printf/extra/write_nbr.c \
-					ft_printf/extra/ft_putchar_int.c \
-					ft_printf/extra/ft_hex_itoa.c \
-					ft_printf/extra/write_hex_caps.c \
-					ft_printf/extra/write_char.c \
-					ft_printf/extra/write_pointer.c \
-					ft_printf/extra/ft_strupper.c \
-					ft_printf/extra/ft_putnbr_base_int.c \
-					ft_printf/extra/ft_putnbr_uint.c \
-					ft_printf/extra/write_hex.c \
-					ft_printf/extra/write_string.c \
-					ft_printf/extra/ft_putnbr_int.c \
-					ft_printf/extra/write_int.c \
-					ft_printf/srcs/ft_printf.c
-OBJS			= $(SRCS:.c=.o)
+NAME	= libft.a
+CC		= gcc
+RM		= rm -f
+CFLAGS	= -Wall -Wextra -Werror -I. #-fsanitize=address -g3
 
-BONUS			=	ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c \
-					ft_lstdelone.c ft_lstiter.c ft_lstlast.c \
-					ft_lstmap.c ft_lstnew.c ft_lstsize.c
-BONUS_OBJS		= $(BONUS:.c=.o)
+FILES	=	ft_isalnum ft_isprint ft_memcmp  ft_putchar_fd ft_split \
+			ft_strlcat ft_strncmp ft_substr ft_atoi ft_isalpha \
+			ft_itoa ft_memcpy  ft_putendl_fd ft_strchr  ft_strlcpy \
+			ft_strnstr ft_tolower ft_bzero   ft_isascii ft_memccpy \
+			ft_memmove ft_putnbr_fd  ft_strdup  ft_strlen  ft_strrchr \
+			ft_toupper ft_calloc  ft_isdigit ft_memchr  ft_memset  ft_strstr \
+			ft_putstr_fd  ft_strjoin ft_strmapi ft_strtrim ft_strcmp ft_union \
+			ft_strchrint ft_putstr_fd2 ft_tolower_chr ft_strtrim_begin \
+			ft_printf/extra/ft_pitoa \
+			ft_printf/extra/ft_putstr_int \
+			ft_printf/extra/write_nbr \
+			ft_printf/extra/ft_putchar_int \
+			ft_printf/extra/ft_hex_itoa \
+			ft_printf/extra/write_hex_caps \
+			ft_printf/extra/write_char \
+			ft_printf/extra/write_pointer \
+			ft_printf/extra/ft_strupper \
+			ft_printf/extra/ft_putnbr_base_int \
+			ft_printf/extra/ft_putnbr_uint \
+			ft_printf/extra/write_hex \
+			ft_printf/extra/write_string \
+			ft_printf/extra/ft_putnbr_int \
+			ft_printf/extra/write_int \
+			ft_printf/srcs/ft_printf \
+			ft_lstadd_back ft_lstadd_front ft_lstclear \
+			ft_lstdelone ft_lstiter ft_lstlast \
+			ft_lstmap ft_lstnew ft_lstsize
 
-CC				= gcc
-RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -I. -fsanitize=address -g3
+SRCS = $(addsuffix .c, $(FILES))
+OBJS = $(addsuffix .o, $(FILES))
 
-NAME			= libft.a
+all:	$(NAME)
 
-all:			$(NAME)
+.c.o:	$(SRCS)
+		$(CC) $(CFLAGS) -c $^ -o $@
 
-$(NAME):		$(OBJS)
-				ar rcs $(NAME) $(OBJS)
+$(NAME):	$(OBJS)
+			ar rcs $(NAME) $(OBJS)
 
 clean:
-				$(RM) $(OBJS) $(BONUS_OBJS)
+		$(RM) $(OBJS) $(BONUS_OBJS)
 
-fclean:			clean
-				$(RM) $(NAME)
+fclean:	clean
+		$(RM) $(NAME)
 
-re:				fclean $(NAME)
+re:	fclean all
 
-bonus:			$(OBJS) $(BONUS_OBJS)
-				ar rcs $(NAME) $(OBJS) $(BONUS_OBJS)
-
-.PHONY:			all clean fclean re bonus
+.PHONY:			all clean fclean re
 

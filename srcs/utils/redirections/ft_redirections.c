@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static int	ft_countredis(char **s, t_redi *redi)
 {
@@ -9,7 +9,7 @@ static int	ft_countredis(char **s, t_redi *redi)
 	j = 0;
 	while (s && s[++i])
 	{
-		if (/*redi->rpos[j] &&*/ i == redi->rpos[j] - 1)
+		if (i == redi->rpos[j] - 1)
 		{
 			j++;
 			if (ft_strstr(s[i], ">>") || ft_strstr(s[i], ">"))
@@ -24,7 +24,6 @@ static int	ft_countredis(char **s, t_redi *redi)
 		redi->in = (t_file *)malloc((redi->n_in + 1) * sizeof(t_file));
 	if (redi->n_out)
 		redi->out = (t_file *)malloc((redi->n_out + 1) * sizeof(t_file));
-	ft_printf("there are %d IN's && %d OUT's\n", redi->n_in, redi->n_out);
 	return (0);
 }
 
@@ -38,19 +37,14 @@ static int	ft_fill(t_file *file, int w, char *s)
 	return (0);
 }
 
-static int	ft_allocredi(char **s, t_redi *redi)
+static int	ft_allocredi(char **s, t_redi *redi, int i, int j)
 {
 	static int	in;
 	static int	out;
-	int			i;
-	int			j;
 	int			error;
 
-	i = -1;
-	j = 0;
 	while (s[++i])
 	{
-		//ft_printf("redi->rpos[%d]==%d\n", j, redi->rpos[j]);
 		if (i == redi->rpos[j] - 1)
 		{
 			j++;
@@ -65,31 +59,7 @@ static int	ft_allocredi(char **s, t_redi *redi)
 			if (error)
 				return (1);
 		}
-	}/*
-	if (redi->n_out)
-	{
-		i = -1;
-		while (++i < redi->n_out)
-		{
-			printf("redi->out[%d].file==%s\n", i, redi->out[i].file);
-			if (!redi->out[i].spiderman)
-				printf("redi->out[%d].spiderman== >\n",i);
-			else
-				printf("redi->out[%d].spiderman== >>\n",i);
-		}
 	}
-	if (redi->n_in)
-	{
-		i = -1;
-		while (++i < redi->n_in)
-		{
-			printf("redi->in[%d].file==%s\n", i, redi->in[i].file);
-			if (!redi->in[i].spiderman)
-				printf("redi->in[%d].spiderman== <\n",i);
-			else
-				printf("redi->in[%d].spiderman== <<\n",i);
-		}
-	}*/
 	return (0);
 }
 
@@ -129,13 +99,13 @@ char	**ft_redirections(char **s, t_redi *redi, t_shell *shell)
 	(void) shell;
 	if (ft_countredis(s, redi))
 		return (s);
-	if (ft_allocredi(s, redi))
+	if (ft_allocredi(s, redi, -1, 0))
 	{
-		//have to free memory but that is for pussys
 		ft_printf("minishell: syntax error near unexpected token 'newline´\n");
-		return NULL;
+		return (NULL);
 	}
 	ft_doderedi(s, redi, shell);
+	// help function 1
 	j = 0;
 	k = 0;
 	i = -1;
@@ -148,8 +118,8 @@ char	**ft_redirections(char **s, t_redi *redi, t_shell *shell)
 		}
 		else
 			k++;
-
 	}
+	// help function 2
 	cmd = (char **)malloc((k + 1) * sizeof(char *));
 	cmd[k] = NULL;
 	j = 0;
@@ -168,8 +138,7 @@ char	**ft_redirections(char **s, t_redi *redi, t_shell *shell)
 			k++;
 		}
 	}
-	i = -1;
-	while (cmd[++i])
-		ft_printf("cmd[%d]==%s\n", i, cmd[i]);
+	ft_double_free(s);
+	//
 	return (cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:22:48 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/20 16:51:30 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:09:52 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_shell
 {
 	pid_t	*pid;
 	int		redi;
-	int		webOS;
 	char	*line;
 	char	**split;
 	char	**pipes;
@@ -71,7 +70,7 @@ int		ft_echo(char **str);
 int		ft_env(void);
 int		ft_cd(char **str);
 int		ft_export(char **str);
-char	**ft_inline(char **str);
+char	**ft_inline(char **str, int i, int w);
 char	*ft_strtillequal(char *str);
 void	ft_already_loop(char **str, char **temp, int i, int j);
 int		ft_unset(char **str);
@@ -79,8 +78,8 @@ int		ft_exit_c(char **str);
 int		ft_exit_p(char **str);
 
 //utils
-char	*ft_expand(char *str, int i);
-char	*ft_get_path(char *s);
+char	*ft_expand(char *str, int i, int j);
+char	*ft_get_path(char *s, int i, int x, char *join);
 char	*ft_trimed(char *s, int i);
 char	**ft_split_pipe(char const *s, unsigned int i, unsigned int nsl);
 char	**ft_split_mini(char *str, t_redi *redi);
@@ -99,7 +98,8 @@ int		ft_checkparent(char **pipe);
 void	ft_fork(t_shell *s, int i);
 void	ft_single_free(char *str);
 void	ft_double_free(char **str);
-char	*ft_dollardup(char *str, char *aux, int w, int k);
+void	ft_already_count(char **str, int i, int *k, int *w);
+void	ft_dollardup(char *str, char *aux, int w, int k);
 void	ft_str_quote(char *str, int *i, int *j);
 void	ft_count_redir(char *str, int *i, int *j);
 char	**ft_redirections(char **s, t_redi *redi, t_shell *shell);
@@ -108,5 +108,6 @@ void	ft_doublein(t_file *file, t_shell *shell, int *n, int n_redi);
 void	ft_out(t_file *file, t_shell *shell, int *n, int n_redi);
 void	ft_doubleout(t_file *file, t_shell *shell, int *n, int n_redi);
 void	ft_sig_handler(int sign_num);
+char	**ft_trames(int j, int sig, int i, char **str);
 
 #endif

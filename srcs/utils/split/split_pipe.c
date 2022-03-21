@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 11:44:36 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/16 14:13:49 by jgainza-         ###   ########.fr       */
+/*   Updated: 2022/03/21 20:30:33 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,8 @@ static void	ft_get_next_str(char **next_str, unsigned int *next_str_len, char c)
 	}
 }
 
-static char	**ft_check_tab(char **str, int i, int sig)
+static char	**ft_check_tab(char **str, int i, int sig, int j)
 {
-	int	j;
-
 	while (str[0][++i])
 		if (str[0][i] != ' ')
 			sig = 1;
@@ -77,26 +75,17 @@ static char	**ft_check_tab(char **str, int i, int sig)
 		ft_double_free(str);
 		return (NULL);
 	}
-	i = 0;
-	while (str[i])
-		i++;
-	j = (int)ft_strlen(str[i - 1]);
-	if (j == 0)
-	{
-		printf("Error synstaxis\n");
-		ft_double_free(str);
+	if (ft_trames(j, sig, i, str) == NULL)
 		return (NULL);
-	}
-	sig = 0;
-	j = -1;
-	while (str[i - 1][++j])
-		if (str[i - 1][j] != ' ')
-			sig = 1;
-	if (sig == 0)
+	i = -1;
+	while (str[++i])
 	{
-		printf("Error synstaxis\n");
-		ft_double_free(str);
-		return (NULL);
+		if (!ft_strcmp(str[i], ""))
+		{
+			printf("Error synstaxis\n");
+			ft_double_free(str);
+			return (NULL);
+		}
 	}
 	return (str);
 }
@@ -126,5 +115,5 @@ char	**ft_split_pipe(char const *s, unsigned int i,
 		ft_strlcpy(tab[i], next_str, next_str_len + 1);
 		next_str_len++;
 	}
-	return (ft_check_tab(tab, -1, 0));
+	return (ft_check_tab(tab, -1, 0, 0));
 }
