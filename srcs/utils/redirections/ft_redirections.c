@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_redirections.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jofernan <jofernan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/23 15:12:28 by jofernan          #+#    #+#             */
+/*   Updated: 2022/03/23 21:33:57 by jofernan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 static int	ft_countredis(char **s, t_redi *redi)
@@ -39,10 +51,12 @@ static int	ft_fill(t_file *file, int w, char *s)
 
 static int	ft_allocredi(char **s, t_redi *redi, int i, int j)
 {
-	static int	in;
-	static int	out;
-	int			error;
+	int	in;
+	int	out;
+	int	error;
 
+	in = 0;
+	out = 0;
 	while (s[++i])
 	{
 		if (i == redi->rpos[j] - 1)
@@ -63,82 +77,51 @@ static int	ft_allocredi(char **s, t_redi *redi, int i, int j)
 	return (0);
 }
 
-static void	ft_doderedi(char **s, t_redi *redi, t_shell *shell)
+static void	ft_doderedi(t_redi *redi, t_shell *shell)
 {
-	static int	in;
-	static int	out;
-	int			i;
-	int			j;
+	int	in;
+	int	out;
+	int	i;
 
+	in = 0;
+	out = 0;
 	i = -1;
-	j = 0;
-	while (s[++i])
+	while (redi->n_in > 0 && ++i < redi->n_in)
 	{
-		if (i == redi->rpos[j] - 1)
-		{
-			j++;
-			if (!ft_strncmp(s[i], ">>", 2))
-				ft_doubleout(&redi->out[out], shell, &out, redi->n_out);
-			else if (!ft_strncmp(s[i], ">", 1))
-				ft_out(&redi->out[out], shell, &out, redi->n_out);
-			else if (!ft_strncmp(s[i], "<<", 2))
-				ft_doublein(&redi->in[in], shell, &in, redi->n_in);
-			else if (!ft_strncmp(s[i], "<", 1))
-				ft_in(&redi->in[in], shell, &in, redi->n_in);
-		}
+		if (redi->in[i].spiderman == 1)
+			ft_doublein(&redi->in[in], shell, &in, redi->n_in);
+		else
+			ft_in(&redi->in[in], shell, &in, redi->n_in);
+	}
+	i = -1;
+	while (redi->n_out > 0 && ++i < redi->n_out)
+	{
+		if (redi->out[i].spiderman == 1)
+			ft_doubleout(&redi->out[out], shell, &out, redi->n_out);
+		else
+			ft_out(&redi->out[out], shell, &out, redi->n_out);
 	}
 }
 
 char	**ft_redirections(char **s, t_redi *redi, t_shell *shell)
 {
 	char	**cmd;
-	int		i;
-	int		j;
 	int		k;
 
 	(void) shell;
 	if (ft_countredis(s, redi))
 		return (s);
+	shell->rediexists = 0;
 	if (ft_allocredi(s, redi, -1, 0))
 	{
 		ft_printf("minishell: syntax error near unexpected token 'newline´\n");
 		return (NULL);
 	}
-	ft_doderedi(s, redi, shell);
-	// help function 1
-	j = 0;
+	ft_doderedi(redi, shell);
 	k = 0;
-	i = -1;
-	while (s[++i])
-	{
-		if (redi->rpos[j] && i == redi->rpos[j] - 1 && s[i + 1])
-		{
-			i++;
-			j++;
-		}
-		else
-			k++;
-	}
-	// help function 2
+	ft_size_cmd(s, (int *)&k, redi);
 	cmd = (char **)malloc((k + 1) * sizeof(char *));
 	cmd[k] = NULL;
-	j = 0;
-	k = 0;
-	i = -1;
-	while (s[++i])
-	{	
-		if (redi->rpos[j] && i == redi->rpos[j] - 1 && s[i + 1])
-		{
-			i++;
-			j++;
-		}
-		else
-		{
-			cmd[k] = ft_strdup(s[i]);
-			k++;
-		}
-	}
-	ft_double_free(s);
-	//
+	ft_fill_cmd(s, cmd, redi);
 	return (cmd);
 }

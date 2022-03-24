@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 14:36:04 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 20:35:01 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:33:18 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,16 @@ int	ft_success(char *str, int i, int k, int x)
 
 static void	ft_looperdollar(char *str, int *i, int *w)
 {
-	*w = 0;
-	while (str[*i] != ' ' && !(str[*i] == '\''
-			|| str[*i] == '\"' || str[*i] == '=') && str[*i])
+	*w = 1;
+	*i = *i + 1;
+	if (str[*i] == '=' || str[*i] == '$' || str[*i] == ' ' || str[*i] == '\'')
+	{
+		*w = *w + 1;
+		*i = *i + 1;
+		return ;
+	}
+	while (str[*i] && (str[*i] != ' ' && str[*i] != '\''
+			&& str[*i] != '\"' && str[*i] != '=' && str[*i] != '$'))
 	{
 		*w = *w + 1;
 		*i = *i + 1;

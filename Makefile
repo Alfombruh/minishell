@@ -29,6 +29,7 @@ FUNC	= srcs/main \
 		  srcs/utils/ft_builtins \
 		  srcs/utils/redirections/ft_redirections \
 		  srcs/utils/redirections/ft_helpredis \
+		  srcs/utils/redirections/additions \
 		  srcs/utils/dup_to
 
 SRC		= $(addsuffix .c, $(FUNC))

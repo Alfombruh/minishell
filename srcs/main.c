@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:16:46 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 18:54:25 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:12:07 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,58 @@ static int	ft_dup_env(char **env)
 	return (0);
 }
 
+static int	ft_check(const char *s, int *i, int *k)
+{
+	while (s[*i])
+	{
+		if (s[*i] && (s[*i] == '<' || s[*i] == '>'))
+			*k = *k + 1;
+		else
+		{
+			*i = *i - 1;
+			break ;
+		}
+		if (*k == 3)
+		{
+			printf("minishell: parse error\n");
+			return (1);
+		}
+		*i = *i + 1;
+	}
+	return (0);
+}
+
+static int	ft_redierror(const char *s)
+{
+	int		i;
+	int		k;
+	char	c;
+
+	i = -1;
+	while (s && s[++i])
+	{
+		if (s[i] && (s[i] == '\'' || s[i] == '\"'))
+		{
+			c = s[i];
+			i++;
+			while (s[i] && s[i] != c)
+				i++;
+		}
+		if (s[i] && (s[i] == '<' || s[i] == '>'))
+		{
+			k = 0;
+			if (ft_check(s, (int *)&i, (int *)&k) == 1)
+				return (1);
+		}
+		if (s[i] == 0)
+			break ;
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
-	int		i;
 
 	ft_dup_env(env);
 	g_glob.pid = 1;
@@ -77,16 +125,18 @@ int	main(int argc, char **argv, char **env)
 	while (1 || argv || argc)
 	{
 		shell.line = readline(BOLD "LoSBa Shados $> " CLOSE);
-		if (!shell.line)
-			ft_exit_p(ft_dup_to_double("exit"));
 		add_history(shell.line);
-		ft_fork(&shell, -1);
-		g_glob.pid = 1;
+		shell.rediexists = 1;
+		if (ft_redierror(shell.line) == 0)
+		{
+			if (!shell.line)
+				ft_exit_p(ft_dup_to_double("exit"));
+			unlink("heredoc.txt");
+			ft_fork(&shell, -1, 0);
+			g_glob.pid = 1;
+		}
 		free(shell.line);
 	}
-	i = -1;
-	while (g_glob.g_env[++i])
-		free(g_glob.g_env[i]);
-	free(g_glob.g_env[i]);
+	ft_double_free(g_glob.g_env);
 	return (0);
 }

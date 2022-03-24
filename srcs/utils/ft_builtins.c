@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:59:44 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 20:57:31 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:18:54 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_checkparent(char **pipe)
 
 int	ft_builtinp(char **pipe, t_shell *shell)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	if (!pipe)
@@ -52,7 +52,7 @@ int	ft_builtinp(char **pipe, t_shell *shell)
 	}
 	if (!ft_strcmp(pipe[0], "cd"))
 		i = ft_cd(pipe);
-	else if (!ft_strcmp(pipe[0], "export"))
+	else if (!ft_strcmp(pipe[0], "export") && shell->rediexists == 1)
 		i = ft_export(pipe);
 	else if (!ft_strcmp(pipe[0], "unset") && shell->nchild == 1)
 		i = ft_unset(pipe);
@@ -75,7 +75,8 @@ void	ft_builtinc(char **pipe, t_shell *shell)
 		ft_echo(pipe);
 	else if (!ft_strcmp(pipe[0], "env"))
 		ft_env();
-	else if (!ft_strcmp(pipe[0], "export") && shell->nchild > 1)
+	else if (!ft_strcmp(pipe[0], "export") && (shell->nchild > 1
+			|| shell->rediexists == 0))
 		ft_export(pipe);
 	else if (!ft_strcmp(pipe[0], "unset"))
 		ft_unset(pipe);

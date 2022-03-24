@@ -1,12 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_helpredis.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jofernan <jofernan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/23 15:12:21 by jofernan          #+#    #+#             */
+/*   Updated: 2022/03/23 21:32:45 by jofernan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 void	ft_in(t_file *file, t_shell *shell, int *n, int n_in)
 {
 	*n += 1;
 	shell->fd[0][0] = open(file->file, O_RDWR);
-	if (shell->redi == -1)
+	if (shell->fd[0][0] == -1)
 	{
 		ft_printf("%s file not found\n", file->file);
+		if (*n == n_in)
+			exit (1);
 		return ;
 	}
 	if (*n == n_in)
@@ -15,35 +29,26 @@ void	ft_in(t_file *file, t_shell *shell, int *n, int n_in)
 
 void	ft_doublein(t_file *file, t_shell *shell, int *n, int n_in)
 {
-	char	*s;
+	int		hd;
 
 	(void) n_in;
 	*n += 1;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	unlink("heredoc.txt");
-	shell->fd[0][1] = open("heredoc.txt", O_RDWR | O_TRUNC | O_CREAT | O_APPEND, 0644);
+	hd = open("heredoc.txt",
+			O_RDWR | O_TRUNC | O_CREAT | O_APPEND, 0644);
 	if (shell->redi == -1)
 		return ((void)ft_printf("%s file not found\n", file->file));
-	while (1)
-	{
-		s = readline(">");
-		if (!s)
-			break ;
-		if (!ft_strcmp(s, file->file))
-			break ;
-		ft_putstr_fd(s, shell->fd[0][1]);
-		ft_putstr_fd("\n", shell->fd[0][1]);
-		free(s);
-	}
-	free(s);
+	ft_readline_doublein(file, hd);
+	close(hd);
 	if (*n == n_in)
 	{
-		close(shell->fd[0][0]);
 		shell->fd[0][0] = open("heredoc.txt", O_RDWR);
 		if (dup2(shell->fd[0][0], STDIN_FILENO) == -1)
-			ft_printf("shell->fd[0][0] is =%d\nsomehow broke the dup2 function\n", shell->fd[0][0]);
+			ft_printf("Somehow broke the heredoc function\n");
 	}
+	unlink("heredoc.txt");
 	signal(SIGINT, ft_sig_handler);
 	signal(SIGQUIT, ft_sig_handler);
 }

@@ -6,7 +6,7 @@
 /*   By: jofernan <jofernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 17:57:26 by jofernan          #+#    #+#             */
-/*   Updated: 2022/02/14 18:06:10 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:43:11 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ int	ft_printf(const char *format, ...)
 		}
 	}
 	va_end(op);
-	return (struc.tl);
+	return (127);
 }

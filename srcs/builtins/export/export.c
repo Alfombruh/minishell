@@ -6,7 +6,7 @@
 /*   By: jofernan <jofernan@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 16:54:16 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 20:34:05 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:32:42 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static int	ft_export_errors(char **str, int i, int j)
 			{
 				ft_putstr_fd("declare -x ", 1);
 				ft_putstr_fd2(g_glob.g_env[i], 1);
-				ft_putstr_fd("\"\n", 1);
 			}
 		}
 		return (1);
@@ -30,7 +29,8 @@ static int	ft_export_errors(char **str, int i, int j)
 	i = -1;
 	while (str[++i])
 	{
-		if (!(str[i][0] == '_' || ft_isalpha(str[i][0])))
+		if (!(str[i][0] == '_' || ft_isalpha(str[i][0])
+				|| str[i][0] == '<' || str[i][0] == '>'))
 		{
 			printf("minishell: export: '%s': not a valid identifier\n", str[i]);
 			j = 1;

@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:22:48 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 21:09:52 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:18:26 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_shell
 {
 	pid_t	*pid;
 	int		redi;
+	int		rediexists;
 	char	*line;
 	char	**split;
 	char	**pipes;
@@ -95,7 +96,7 @@ int		ft_builtinp(char **pipe, t_shell *shell);
 void	ft_builtinc(char **pipe, t_shell *shell);
 int		ft_checkchild(char **pipe);
 int		ft_checkparent(char **pipe);
-void	ft_fork(t_shell *s, int i);
+void	ft_fork(t_shell *s, int i, int st);
 void	ft_single_free(char *str);
 void	ft_double_free(char **str);
 void	ft_already_count(char **str, int i, int *k, int *w);
@@ -109,5 +110,8 @@ void	ft_out(t_file *file, t_shell *shell, int *n, int n_redi);
 void	ft_doubleout(t_file *file, t_shell *shell, int *n, int n_redi);
 void	ft_sig_handler(int sign_num);
 char	**ft_trames(int j, int sig, int i, char **str);
+void	ft_size_cmd(char **s, int *k, t_redi *redi);
+void	ft_fill_cmd(char **s, char **cmd, t_redi *redi);
+void	ft_readline_doublein(t_file *file, int hd);
 
 #endif

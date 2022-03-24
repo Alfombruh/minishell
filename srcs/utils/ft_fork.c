@@ -6,7 +6,7 @@
 /*   By: jgainza- <jgainza-@student.42urduli>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:14 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 21:09:54 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/23 21:18:33 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,12 @@ static void	ft_close(t_shell *shell, int j)
 	free(shell->pid);
 }
 
-static void	ft_exe(t_shell *shell, int id)
+static void	ft_exe(t_shell *shell, int id, char *temp)
 {
 	t_redi	redi;
-	char	*temp;
 
 	ft_memset(&redi, 0, sizeof(redi));
-	rl_catch_signals = 0;
+	rl_catch_signals = 1;
 	shell->split = ft_split_mini(shell->pipes[id], &redi);
 	shell->split = ft_redirections(shell->split, &redi, shell);
 	if (!shell->split)
@@ -72,10 +71,7 @@ static void	ft_exe(t_shell *shell, int id)
 	if (temp != NULL)
 		execve(temp, shell->split, g_glob.g_env);
 	if (ft_checkparent(shell->split) == 1)
-	{
-		ft_printf("minishell: %s: command not found\n", shell->split[0]);
-		exit (127);
-	}
+		exit(ft_printf("minishell: %s: command not found\n", shell->split[0]));
 	exit (0);
 }
 
@@ -86,15 +82,14 @@ static void	ft_repipe_help(t_shell *shell)
 	shell->fd[0][0] = shell->fd[1][0];
 	shell->fd[0][1] = shell->fd[1][1];
 	pipe(shell->fd[1]);
+	rl_catch_signals = 0;
 }
 
-void	ft_fork(t_shell *shell, int i)
+void	ft_fork(t_shell *shell, int i, int st)
 {
 	int	status;
-	int	st;
 
 	g_glob.pid = 0;
-	unlink("heredoc.txt");
 	shell->pipes = ft_split_pipe(shell->line, -1, 0);
 	if (!shell->pipes)
 		return ;
@@ -104,7 +99,7 @@ void	ft_fork(t_shell *shell, int i)
 		close(shell->fd[0][1]);
 		shell->pid[i] = fork();
 		if (shell->pid[i] == 0)
-			ft_exe(shell, i);
+			ft_exe(shell, i, NULL);
 		else
 		{
 			if (shell->nchild == i + 1)

@@ -6,7 +6,7 @@
 /*   By: jofernan <jofernan@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/13 10:34:35 by jgainza-          #+#    #+#             */
-/*   Updated: 2022/03/21 21:25:51 by jofernan         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:28:15 by jofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	ft_cd(char **str)
 	}
 	else
 	{
-		if (chdir(str[1])== -1)
+		if (chdir(str[1]) == -1)
 		{
 			ft_printf("minishell: cd : %s: No such file or directory\n", str[1]);
 			return (1);
