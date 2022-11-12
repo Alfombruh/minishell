@@ -1,4 +1,7 @@
-# MINISHELL-BASH ADOS
+<h1 align="center"> BA$H-ADOS </h1>
+<p align="center">
+  <img src="image/minishell.png" alt="minishell 42 project badge"/>
+</p>
 
 ## __Minishell-My Tale__
 
